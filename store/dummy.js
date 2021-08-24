@@ -4,21 +4,24 @@ const db = {
     ]
 };
 
-function list (table) {
+async function list (table) {
     return db[table];
 }
 
-function get (table, id) {
-    let col = list(table);
+async function get (table, id) {
+    let col = await list(table);
     return col.filter( item => item.id === id )[0] || null;
 }
 
-function upsert (table, data) {
-    db[collection].push(data);
+async function upsert (table, data) {
+    db[table].push(data);
 }
 
-function remove (table, id) {
-    return true;
+async function remove (table, id) {
+    let element = await get(table, id);
+    let col = await list(table);
+    let idx = col.indexOf(element);
+    return db[table].splice(idx, 1);
 }
 
 module.exports = {
