@@ -20,7 +20,7 @@ async function upsert (table, data) {
 
     db[table].push(data);
 
-    console.log(db);
+    return await get(table, data.id);
 }
 
 async function remove (table, id) {
