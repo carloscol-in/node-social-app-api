@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const error = require('../utils/error');
 
 const SECRET = config.jwt.secret;
 
@@ -15,7 +16,11 @@ const check = {
     own: function (req, owner) {
         // check the requesting user (by token) is the owner of the user
         const decoded = decodeHeader(req);
-        console.log(decoded);
+
+        // check if it's owned by requesting user
+        if (decoded.id !== owner) {
+            throw error("User has no permission to do this.", 401);
+        }
     },
 }
 
@@ -44,4 +49,5 @@ function decodeHeader (req) {
 
 module.exports = {
     sign,
+    check,
 };
