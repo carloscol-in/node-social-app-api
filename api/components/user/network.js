@@ -12,8 +12,9 @@ router.get('/:id', get);
 router.post('/', upsert);
 router.put('/', secure('update'), upsert);
 // follow routes
+router.get('/:id/following', following);
+router.get('/:id/followers', followers);
 router.post('/follow/:id', secure('logged'), follow);
-router.post('/followers', secure('logged'), followers);
 
 function list (req, res, next) {
     Controller.list()
@@ -48,8 +49,16 @@ function follow (req, res, next) {
 }
 
 function followers (req, res, next) {
-    Controller.followers(req.user.id)
+    Controller.followers(req.params.id)
         .then(data => {
+            response.success(req, res, data, 200);
+        })
+        .catch(next);
+}
+
+function following (req, res, next) {
+    Controller.following(req.params.id)
+        .then((data) => {
             response.success(req, res, data, 200);
         })
         .catch(next);
