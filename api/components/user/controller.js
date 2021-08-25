@@ -51,8 +51,20 @@ module.exports = function (injected_store) {
         });
     }
 
-    const followers = (user_from) => {
-        return store.query(`${TABLE}_follow`, {user_to: user_from});
+    const followers = async(user_from) => {
+        const join = {};
+        join[TABLE] = 'user_from';
+        const query = {user_to: user_from};
+
+        return await store.query(`${TABLE}_follow`, query, join);
+    }
+
+    const following = async (user) => {
+        const join = {};
+        join[TABLE] = 'user_to';
+        const query = { user_from: user };
+
+        return await store.query(`${TABLE}_follow`, query, join)
     }
 
     return {
@@ -62,6 +74,7 @@ module.exports = function (injected_store) {
         remove,
         follow,
         followers,
+        following,
     };
 
 }
