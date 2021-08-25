@@ -13,8 +13,7 @@ module.exports = function (injected_store) {
         return store.list(TABLE);
     }
 
-    function get (user_id) {
-        let id = parseInt(user_id);
+    function get (id) {
         return store.get(TABLE, id);
     }
 
@@ -45,11 +44,24 @@ module.exports = function (injected_store) {
         return store.remove(TABLE, body.id);
     }
 
+    const follow = (user_from, user_to) => {
+        return store.upsert(`${TABLE}_follow`, {
+            user_from,
+            user_to
+        });
+    }
+
+    const followers = (user_from) => {
+        return store.query(`${TABLE}_follow`, {user_to: user_from});
+    }
+
     return {
         list,
         get,
         upsert,
-        remove
+        remove,
+        follow,
+        followers,
     };
 
 }
