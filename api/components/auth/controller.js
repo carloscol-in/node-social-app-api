@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-const { nanoid } = require('nanoid');
-const auth = require('../../../auth');
 
+const auth = require('../../../auth');
 const TABLE = 'auth';
 
 module.exports = function (injected_store) {
@@ -11,13 +10,14 @@ module.exports = function (injected_store) {
     }
 
     async function login (username, password) {
-        const data = await store.query(TABLE, { username: username });
+        const col = await store.query(TABLE, { username: username });
+        const data = col[0];
 
         return bcrypt.compare(password, data.password)
             .then(equal => {
                 if (equal) {
                     // Generate token
-                    return auth.sign(data);
+                    return auth.sign({ ...data });
                 } else {
                     throw new Error("Invalid information.");
                 }
