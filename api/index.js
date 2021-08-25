@@ -5,6 +5,7 @@ const config = require('../config.js');
 const errors = require('../network/errors');
 const user = require('./components/user/network');
 const auth = require('./components/auth/network');
+const post = require('./components/post/network');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json())
 // Router
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger_doc))
 app.use('/api/user', user);
+app.use('/api/post', post);
 app.use('/api/auth', auth);
 
 /**
