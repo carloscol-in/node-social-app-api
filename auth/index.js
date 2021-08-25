@@ -27,7 +27,7 @@ const check = {
 function getToken (auth) {
     // Bearer {{token}}
     if (!auth) {
-        throw new Error('No token found on request');
+        throw error('No token found on request', 400);
     }
 
     if (auth.indexOf('Bearer ') == -1) throw new Error('Format invalid');
