@@ -22,6 +22,10 @@ const check = {
             throw error("User has no permission to do this.", 401);
         }
     },
+
+    logged: function (req) {
+        const decoded = decodeHeader(req);
+    }
 }
 
 function getToken (auth) {
