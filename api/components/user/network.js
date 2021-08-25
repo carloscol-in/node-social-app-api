@@ -6,39 +6,53 @@ const Controller = require('./index');
 
 const router = express.Router();
 
+// user routes
 router.get('/', list);
 router.get('/:id', get);
 router.post('/', upsert);
 router.put('/', secure('update'), upsert);
+// follow routes
+router.post('/follow/:id', secure('logged'), follow);
+router.post('/followers', secure('logged'), followers);
 
-function list (req, res) {
+function list (req, res, next) {
     Controller.list()
         .then((user_list) => {
             response.success(req, res, user_list, 200);
         })
-        .catch((err) => {
-            response.error(req, res, err.message, 500);
-        });
+        .catch(next);
 }
 
-function get (req, res) {
+function get (req, res, next) {
     Controller.get(req.params.id)
         .then((user) => {
             response.success(req, res, user, 200);
         })
-        .catch((err) => {
-            response.error(req, res, err.message, 500);
-        });
+        .catch(next);
 }
 
-function upsert (req, res) {
+function upsert (req, res, next) {
     Controller.upsert(req.body)
         .then((user) => {
             response.success(req, res, user, 201);
         })
-        .catch((err) => {
-            response.error(req, res, err, 500);
+        .catch(next)
+}
+
+function follow (req, res, next) {
+    Controller.follow(req.user.id, req.params.id)
+        .then(data => {
+            response.success(req, res, data, 201);
         })
+        .catch(next);
+}
+
+function followers (req, res, next) {
+    Controller.followers(req.user.id)
+        .then(data => {
+            response.success(req, res, data, 200);
+        })
+        .catch(next);
 }
 
 module.exports = router;
